@@ -1,0 +1,61 @@
+#clearSNPdata {
+  margin-left: 50px;
+  background-color: pink;
+}
+
+#prevCNV{
+  margin-left: 100px;
+  width:100px;
+  background-color: skyblue;
+}
+
+#nextCNV{
+  margin-left: 10px;
+  width:100px;
+  background-color: skyblue;
+}
+
+#zoomOut2X, #zoomOut5X, #zoomOut10X {
+  margin-top: 25px;
+  background-color: skyblue;
+}
+
+
+#cnvTbl{
+  font-size: 75%;
+}
+
+/*button*/
+#setChr, #setCN, #setNormRate, #setPos, #setChrGene {
+  margin-top: 20px;
+  margin-left: 5px;
+  margin-right: 2px;
+}
+
+#setStart{
+  margin-top: 25px;
+  margin-left: 10px;
+  margin-right: 1px;
+}
+
+#setEnd {
+  margin-top: 25px;
+  margin-left:1px;
+  margin-right: 200px;
+}
+
+#geneTbl {
+  margin-left: 50px;
+}
+
+#spectPos {
+  margin-top: 16px;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+#zoomOut2XSpect, #zoomOut5XSpect, #zoomOut10XSpect{
+  background-color: skyblue;
+  margin-top: 20px;
+  margin-right: 2px;
+}
