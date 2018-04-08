@@ -1,20 +1,20 @@
-CNAViewer
+ShinyCNV
 ================
 
 An R/Shiny application to view and annotate copy number variations
 ------------------------------------------------------------------
 
-CNAViewer is developed by wrapping up the graphic and data table processing functions in R package, and the interactive features are implemented in Shiny R package. Users can visually check normalized SNP data (either from Illumina or Affymetrix platform) together with reported CNAs from any CNA detection tools, and semi-atomically edit and update the CNAs. Detailed steps are listed below and a video tutorial is available at ![YouTube](). [![youtube](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+ShinyCNV is developed by wrapping up the graphic and data table processing functions in R package, and the interactive features are implemented in Shiny R package. Users can visually check normalized SNP data (either from Illumina or Affymetrix platform) together with reported CNVs from any CNV detection tools, and semi-atomically edit and update the CNVs. Detailed steps are listed below and a video tutorial is available at ![YouTube](). [![youtube](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
 
 Installation
 ------------
 
 1.  Install [R environment](https://www.r-project.org/)
 2.  Install [RStudio](https://www.rstudio.com/).
-3.  Install CNAViewer
-    -   Download CNAViewer released version (stable) or testing version (from master branch).
+3.  Install ShinyCNV
+    -   Download ShinyCNV released version (stable) or testing version (from master branch).
         The full version includes 11 samples' SNP data (~350Mb), and the lite version includes 2 paired samples' SNP data (~60Mb).
-    -   Unzip the CNAViewer package and open either "ui.R" or "server.R" in RStudio
+    -   Unzip the ShinyCNV package and open either "ui.R" or "server.R" in RStudio
     -   Click "Run App" button at the top-right corner, the availability of relied R packages will be automatically checked and installed.
     -   After successful installation, you should be able to see this without error:
 
@@ -31,50 +31,50 @@ Input files
         -   Log R Ratio
         -   B Allele Freq
     -   Detailed steps on preparing [**Illumina**](http://penncnv.openbioinformatics.org/en/latest/user-guide/input/) and [**Affymetrix**](http://penncnv.openbioinformatics.org/en/latest/user-guide/affy/) data are available from PennCNV's website.
-2.  Reported CNA regions
-    -   The reported CNAs could be called by software, as long as the following columns are provided (use the exact same column names):
-        -   index `/CNA id asigned by users, which is used to compare the updated CNAs with the original ones`
+2.  Reported CNV regions
+    -   The reported CNVs could be called by software, as long as the following columns are provided (use the exact same column names):
+        -   index `/CNV id asigned by users, which is used to compare the updated CNVs with the original ones`
         -   caseID `/case ID; SNP data file is caseID.{suffix}`
         -   controlID `/control ID; SNP data file is control.{suffix}; for unpaired cases, use other control`
         -   chr `/chromosome`
-        -   start `/CNA start position`
-        -   end `/CNA end position`
+        -   start `/CNV start position`
+        -   end `/CNV end position`
         -   CN `/copy number`
         -   normRate `/normal sample contamination rate; set 0 if unknown`
         -   gender `/Female or Male; set 'Unknown' if unknown`
         -   paired `/Yes or No`
 
-Annotate CNA table
+Annotate CNV table
 ------------------
 
-Now we are ready to go! Click the "Browse" button to import the CNA region file:
+Now we are ready to go! Click the "Browse" button to import the CNV region file:
 
-![CNA table panel](./readme_files/fig/2.PNG)
+![CNV table panel](./readme_files/fig/2.PNG)
 
 Within this panel, you could:
 
--   select a CNA segment by clicking
+-   select a CNV segment by clicking
 -   read in SNP data based on the imported case ID and control ID
 -   use "Prev/Next CNV" button to navigate the selected CNV
 -   add/delete CNV
--   mark selected CNA as germline/covered/false/true by clicking the buttons
+-   mark selected CNV as germline/covered/false/true by clicking the buttons
 -   set chr/copy number(CN)/normRate(NR); "set chr" is only for newly added CNVs
 -   clear the imported SNP data, which usually take the longest time, so be cautious on doing this
 
-Check CNAs and update their breakpoints
+Check CNVs and update their breakpoints
 ---------------------------------------
 
-The most useful function of this app is to manually check each CNA and adjust inaccurate breakpoints, which is in the LRR/BAF panel as below:
+The most useful function of this app is to manually check each CNV and adjust inaccurate breakpoints, which is in the LRR/BAF panel as below:
 
 ![LRR/BAF panel](./readme_files/fig/3.PNG)
 
--   This figure will be shown once CNA "A004" is selected. Each dot represents a SNP probe, with X axis along chromosome coordination and Y axis showing normalized LRR and BAF.
+-   This figure will be shown once CNV "A004" is selected. Each dot represents a SNP probe, with X axis along chromosome coordination and Y axis showing normalized LRR and BAF.
 -   Two red vertical lines indicate the reported breakpoints of selected CNV, which is obviously correct according to the figure.
 -   The RefSeq genes are shown as bars at the bottom panel, and the COSMIC cancer genes are marked in red. Detailed gene information could be checked by clicking. E.g., the red bar is clicked and the information of gene *ETV6* is shown at the bottom.
 -   To change the breakpoints of selected CNV, users could zoom in LRR/BAF graph by mouse-swipe and then pick the correct position by clicking. Chromosome position of the SNP nearest to the click will be shown in box "Pos:" and the start/end positions could be updated by "Set Start/End" buttons.
 -   In case of marking whole chromosome gain/loss, users need the start and end positions of that chromosome. To do this, the dropdown list "Chr:" is very handy. Usually the start of each chromosome is 0, but for chromosome 13, 14, 15, 21 and 22, the P arm is not assessable and thus would start from the first SNP probe according to the most recent Infinium Omni2.5Exome-8 array.
 
-CNA spectrum for imported samples
+CNV spectrum for imported samples
 ---------------------------------
 
 After loading SNP data , LRR across genome will be shown in the spectrum panel below:

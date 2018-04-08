@@ -1,4 +1,3 @@
-#CNViewer
 #Author: Zhaohui Gu
 #Email: gzhmat@gmail.com
 #URL: https://github.com/gzhmat/CNViewer
@@ -12,7 +11,7 @@ source("./config.R")
 fluidPage(
   theme = "style.css",
   title = 'CNViewer', #webpage title
-  h3('Copy Number Variaion Viewer'), #top-left title
+  h3('Shiny Copy Number Variation'), #top-left title
   fluidRow(
     column(3, 
            fileInput("cnvFile", "Choose CNV File", accept = c('text/csv') ), # browse cnv file
