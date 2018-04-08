@@ -1,4 +1,4 @@
-print("Run init.R")
+print("Run config.R")
 
 #install relied packages
 source("misc/install.R")

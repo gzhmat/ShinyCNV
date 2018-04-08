@@ -7,7 +7,7 @@
 print("Run ui.R")
 
 #init the app
-source("./init.R")
+source("./config.R")
 
 fluidPage(
   theme = "style.css",
