@@ -1,4 +1,3 @@
-
 index	caseID	controlID	chr	start	end	CN	normRate	gender	paired
 A001	P1A	P1C	1	198805715	198901697	1	0	Male	Yes
 A002	P1A	P1C	11	47226383	47659135	1	0	Male	Yes
