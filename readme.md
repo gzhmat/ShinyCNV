@@ -4,7 +4,7 @@ ShinyCNV
 An R/Shiny application to view and annotate copy number variations
 ------------------------------------------------------------------
 
-ShinyCNV is developed by wrapping up the graphic and data table processing functions in R package, and the interactive features are implemented in Shiny R package. Users can visually check normalized SNP data (either from Illumina or Affymetrix platform) together with reported CNVs from any CNV detection tools, and semi-atomically edit and update the CNVs. Detailed steps are listed below and a video tutorial is available at ![YouTube](). [![youtube](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+ShinyCNV is developed by wrapping up the graphic and data table processing functions in R package, and the interactive features are implemented in Shiny R package. Users can visually check normalized SNP data (either from Illumina or Affymetrix platform) together with reported CNVs from any CNV detection tools, and semi-atomically edit and update the CNVs. Detailed steps are listed below and a video tutorial is available at YouTube.
 
 Installation
 ------------
