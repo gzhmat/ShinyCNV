@@ -1,7 +1,3 @@
-#Author: Zhaohui Gu
-#Email: gzhmat@gmail.com
-#URL: https://github.com/gzhmat/CNViewer
-
 #ui.R is running----
 print("Run ui.R")
 
