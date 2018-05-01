@@ -17,19 +17,19 @@ dataDir="./SNPdata/"
 dataSuffix=".txt.gz"
 
 #global variables
-#max point number for showing BAF and LRR
-maxPt=2e4
+
 #max point number for showing the spectrum/rect
-maxRect=2000 #base on the screen resolution
+maxRect=2500 #base on the screen resolution
 
 #control the width of SNP in spectrum when expanded
 spectSNPpadRatio=1/400
 spectSNPwidthMax=2000
 
+#SNP number less than wiggleRoom*maxRect will not be sampled
 wiggleRoom=1.5
 bafLrrHeight=140
 genePlotHeight=100
-cnvPadding=3 #cnvPadding * cnvLength +- CNV region
+# cnvPadding=3 
 
 maxLRR=1
 minLRR=-4
@@ -80,6 +80,7 @@ btmPlotMar=c(2, 10, 3, 2)
 caseChrSepLineCol="grey25"
 geneAnnoCol="green4"
 btmFigStepRatio=1/200
+#define gene/region padding folds
 geneAdjLengthX=10
 
 #prepare smooth line data----

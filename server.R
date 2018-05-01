@@ -4,6 +4,13 @@ print("Run server.R")
 #server main function----
 function(input, output, session) {
   rv=reactiveValues()
+  
+  #define CNV padding folds
+  rv$cnvPadding=NULL #cnvPadding * cnvLength +- CNV region
+  
+  #max point number for showing BAF and LRR
+  rv$maxPt=NULL
+
   #define x range
   rv$xmin=NULL
   rv$xmax=NULL
@@ -50,6 +57,16 @@ function(input, output, session) {
     }
   })
   
+  #claim CNV start and end interactive to update figure immediately after update
+  cnvStart=reactive({
+    if(!is.null(rv$cnvItem))
+      rv$cnvItem$start
+  })
+  cnvEnd=reactive({
+    if(!is.null(rv$cnvItem))
+      rv$cnvItem$end
+  })
+  
   #reactive values only rely on reactiveValue type, not reactive function value,
   #set xlab text----
   xlabText=reactive({
@@ -79,8 +96,8 @@ function(input, output, session) {
       SNPDF=rv$SNPdata[[rv$cnvItem$caseID]] %>%
         .[Chr == cnvChr & Pos >= xmin & Pos <= xmax]
       #limit the max number of points
-      if(nrow(SNPDF) > maxPt)
-        SNPDF=sample_n(SNPDF, maxPt)
+      if(nrow(SNPDF) > rv$maxPt)
+        SNPDF=sample_n(SNPDF, rv$maxPt)
       return(SNPDF)
     }
   })
@@ -92,8 +109,8 @@ function(input, output, session) {
       SNPDF=rv$SNPdata[[rv$cnvItem$controlID]] %>%
         .[Chr == cnvChr & Pos >= xmin & Pos <= xmax]
       #limit the max number of points
-      if(nrow(SNPDF) > maxPt)
-        SNPDF=sample_n(SNPDF, maxPt)
+      if(nrow(SNPDF) > rv$maxPt)
+        SNPDF=sample_n(SNPDF, rv$maxPt)
       return(SNPDF)
     }
   })
@@ -192,8 +209,8 @@ function(input, output, session) {
     rv$cnvIdx=input$cnvTbl_rows_selected
     rv$cnvItem=rv$cnvDF[rv$cnvIdx,]
     cnvLength=rv$cnvItem$end-rv$cnvItem$start+1
-    rv$xmin=rv$cnvItem$start-cnvLength*cnvPadding
-    rv$xmax=rv$cnvItem$end+cnvLength*cnvPadding
+    rv$xmin=rv$cnvItem$start-cnvLength*rv$cnvPadding
+    rv$xmax=rv$cnvItem$end+cnvLength*rv$cnvPadding
     rv$brushed=F
   })
   
@@ -270,11 +287,21 @@ function(input, output, session) {
         rv$clickedPos=chrRefData %>% filter(chr== cnvChr) %>% select_(.dots=chrTail) %>% as.integer()
       }
     })
+  #set CNV padding folds----
+  observeEvent(input$getCnvPadX, {
+      rv$cnvPadding=as.integer(input$getCnvPadX)
+  })
+  
+  #set max SNP pt----
+  observeEvent(input$maxSNPnum, {
+    rv$maxPt=as.integer(input$maxSNPnum)
+  })
   
   #set start and end pos to cnv----
   observeEvent(input$setStart, {
     if(!is.null(rv$cnvItem) & grepl("^\\d+$", input$position)){
        rv$cnvDF$start[rv$cnvIdx]=as.numeric(input$position)
+       rv$cnvItem$start=rv$cnvDF$start[rv$cnvIdx]
        rv$cnvDF$note[rv$cnvIdx]="True"
        rv$cnvDF$updated[rv$cnvIdx]="Yes"
     }
@@ -282,6 +309,7 @@ function(input, output, session) {
   observeEvent(input$setEnd, {
     if(!is.null(rv$cnvItem) & grepl("^\\d+$", input$position) ){
       rv$cnvDF$end[rv$cnvIdx]=as.numeric(input$position)
+      rv$cnvItem$end=as.numeric(input$position)
       rv$cnvDF$note[rv$cnvIdx]="True"
       rv$cnvDF$updated[rv$cnvIdx]="Yes"
     }
@@ -351,14 +379,20 @@ function(input, output, session) {
     }
   })
   
-  #change CN of the cnv item----
+  #set CN, normRate, true, germ and covered for cnv item----
   observeEvent(input$setCN, {
-    if(!is.null(input$cnvTbl_rows_selected))
+    if(!is.null(input$cnvTbl_rows_selected)){
       rv$cnvDF$CN[input$cnvTbl_rows_selected]=input$copyNum
+      rv$cnvDF$note[rv$cnvIdx]="True"
+      rv$cnvDF$updated[rv$cnvIdx]="Yes"
+    }
   })
   observeEvent(input$setNormRate, {
-    if(!is.null(input$cnvTbl_rows_selected))
+    if(!is.null(input$cnvTbl_rows_selected)){
       rv$cnvDF$normRate[input$cnvTbl_rows_selected]=input$normRate
+      rv$cnvDF$note[rv$cnvIdx]="True"
+      rv$cnvDF$updated[rv$cnvIdx]="Yes"
+    }
   })
   observeEvent(input$setTrueCNV, {
     if(!is.null(input$cnvTbl_rows_selected))
