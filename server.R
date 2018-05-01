@@ -765,8 +765,10 @@ function(input, output, session) {
             par(mar=btmPlotMar); 
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
             if(snpPerCase < maxRect){
-              tmpDF=caseSpectDF() %>% group_by(ymin) %>%
-                mutate(x1=Pos - 1000, x2=Pos + 1000, x1=if_else(x1 < lag(x2, default = 0), (lag(x2)+x1)/2, x1),
+              spectSNPpad=(spectXmax-spectXmin)*spectSNPpadRatio
+              padWidth=if_else(spectSNPpad < spectSNPwidthMax, spectSNPpad, spectSNPwidthMax)
+              tmpDF=caseSpectDF() %>% group_by(ymin) %>% arrange(Pos) %>%
+                mutate(x1=Pos - padWidth, x2=Pos + padWidth, x1=if_else(x1 < lag(x2, default = 0), (lag(x2)+x1)/2, x1),
                        x2= if_else(x2 > lead(x1, default = 3e10), lead(x1), x2))
               rect(xleft = tmpDF$x1, xright =tmpDF$x2, ybottom = tmpDF$ymin, ytop = tmpDF$ymin+1, col = tmpDF$LRRcolor, border=NA)
             }else{
@@ -797,8 +799,10 @@ function(input, output, session) {
             par(mar=btmPlotMar);
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
             if(snpPerCase < maxRect){
-              tmpDF=caseSpectDF() %>% group_by(ymin) %>%
-                mutate(x1=Pos - 1000, x2=Pos + 1000, x1=if_else(x1 < lag(x2, default = 0), (lag(x2)+x1)/2, x1),
+              spectSNPpad=(spectXmax-spectXmin)*spectSNPpadRatio
+              padWidth=if_else(spectSNPpad < spectSNPwidthMax, spectSNPpad, spectSNPwidthMax)
+              tmpDF=caseSpectDF() %>% group_by(ymin) %>% arrange(Pos) %>%
+                mutate(x1=Pos - padWidth, x2=Pos + padWidth, x1=if_else(x1 < lag(x2, default = 0), (lag(x2)+x1)/2, x1),
                        x2= if_else(x2 > lead(x1, default = 3e10), lead(x1), x2))
               rect(xleft = tmpDF$x1, xright =tmpDF$x2, ybottom = tmpDF$ymin, ytop = tmpDF$ymin+1, col = tmpDF$LRRcolor, border=NA)
             }
