@@ -64,7 +64,7 @@ fluidPage(
                     #select padding folds for CNV
                     column(1, selectInput("getCnvPadX", "Padding X", c(0, 2, 4, 5, 8, 10, 20), selected = 4 )),
                     #max point number for showing BAF and LRR
-                    column(1, selectInput("maxSNPnum", "max SNP(k)", c(1, 2, 5, 8, 10, 20, 50), selected = 10 )),
+                    column(1, selectInput("maxSNPnum", "maxSNP", c(1000, 2000, 5000, 8000, 10000, 20000, 50000), selected = 10000 )),
                     #zoon out----
                     column(1, actionButton("zoomOut2X", "Zoom out 2X")),
                     column(1, actionButton("zoomOut5X", "Zoom out 5X")),
