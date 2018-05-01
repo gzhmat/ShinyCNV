@@ -294,7 +294,7 @@ function(input, output, session) {
   
   #set max SNP pt----
   observeEvent(input$maxSNPnum, {
-    rv$maxPt=as.integer(input$maxSNPnum)
+    rv$maxPt=as.integer(input$maxSNPnum)*1000
   })
   
   #set start and end pos to cnv----
