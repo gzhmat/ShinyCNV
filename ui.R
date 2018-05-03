@@ -50,10 +50,12 @@ fluidPage(
                     #BAF, LRR and gene list plot----
                     column(12, plotOutput('caseBAF', height = bafLrrHeight, click = "caseBAF_click",
                                           brush = brushOpts("caseBAF_brush", delay = 500, delayType ="debounce", resetOnNew = T))),
-                    column(12, plotOutput('ctrlBAF', height = bafLrrHeight )),
+                    column(12, plotOutput('ctrlBAF', height = bafLrrHeight, click = "ctrlBAF_click",
+                                          brush = brushOpts("ctrlBAF_brush", delay = 500, delayType ="debounce", resetOnNew = T))),
                     column(12, plotOutput('caseLRR', height = bafLrrHeight, click = "caseLRR_click",
                                           brush = brushOpts("caseLRR_brush", delay = 500, delayType ="debounce", resetOnNew = T))),
-                    column(12, plotOutput('ctrlLRR', height = bafLrrHeight )),
+                    column(12, plotOutput('ctrlLRR', height = bafLrrHeight, click = "ctrlLRR_click",
+                                          brush = brushOpts("ctrlLRR_brush", delay = 500, delayType ="debounce", resetOnNew = T))),
                     column(12, plotOutput('genePlot', height = genePlotHeight , click = "genePlot_click")),
                     
                     #set position by selecting near point----

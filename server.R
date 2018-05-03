@@ -226,6 +226,16 @@ function(input, output, session) {
     rv$xmax=input$caseLRR_brush$xmax
     rv$brushed=T
   })
+  observeEvent(input$ctrlBAF_brush, {
+    rv$xmin=input$ctrlBAF_brush$xmin
+    rv$xmax=input$ctrlBAF_brush$xmax
+    rv$brushed=T
+  })
+  observeEvent(input$caseLRR_brush, {
+    rv$xmin=input$ctrlLRR_brush$xmin
+    rv$xmax=input$ctrlLRR_brush$xmax
+    rv$brushed=T
+  })
   
   #calculate xlim range----
   xLim=reactive({
@@ -266,6 +276,24 @@ function(input, output, session) {
         rv$clickedPos=nearPos
       }
     })
+  observeEvent(input$ctrlBAF_click, {
+    if(!is.null(rv$SNPdata) & !is.null(rv$cnvItem) ){
+      nearPos=nearPoints(ctrlSNPDF(), input$ctrlBAF_click, xvar = "Pos", yvar = "BAF", maxpoints = 1, addDist = F)$Pos[1];
+      if(is.na(nearPos))
+        rv$clickedPos=NULL
+      else
+        rv$clickedPos=nearPos
+    }
+  })
+  observeEvent(input$ctrlLRR_click, {
+    if(!is.null(rv$SNPdata) & !is.null(rv$cnvItem) ){
+      nearPos=nearPoints(ctrlSNPDF(), input$ctrlLRR_click, xvar = "Pos", yvar = "LRR", maxpoints = 1, addDist = F)$Pos[1];
+      if(is.na(nearPos))
+        rv$clickedPos=NULL
+      else
+        rv$clickedPos=nearPos
+    }
+  })
   
   
   #observe clicked gene----
