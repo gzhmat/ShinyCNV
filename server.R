@@ -231,7 +231,7 @@ function(input, output, session) {
     rv$xmax=input$ctrlBAF_brush$xmax
     rv$brushed=T
   })
-  observeEvent(input$caseLRR_brush, {
+  observeEvent(input$ctrlLRR_brush, {
     rv$xmin=input$ctrlLRR_brush$xmin
     rv$xmax=input$ctrlLRR_brush$xmax
     rv$brushed=T
