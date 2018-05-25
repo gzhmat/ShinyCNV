@@ -5,6 +5,31 @@ print("Run server.R")
 function(input, output, session) {
   rv=reactiveValues()
   
+  #select hg version and init reference
+  rv$chrRefData=NULL
+  rv$geneRefData=NULL
+  rv$karyoList=NULL
+  rv$chrPosOffset=NULL
+  rv$chrLabelDF=NULL
+  rv$genomeLen=NULL
+  observeEvent(input$getHgVersion, {
+    if(!rv$SNPdataStatus){
+      hgVersion=input$getHgVersion
+      chrRefFile=paste0("refData/chrRange.", hgVersion, ".txt.gz");
+      rv$chrRefData=read_tsv(chrRefFile, col_types = "cdd", progress = F)
+      geneRefFile=paste0("refData/geneRange.", hgVersion, ".txt.gz");
+      rv$geneRefData=read_tsv(geneRefFile, col_types = "ccddccc", progress = F) %>% group_by(chr) %>%
+        mutate(lineNum=seq_along(chr)%%3+1)
+      karyoFile=paste0("refData/cytoband.", hgVersion, ".txt.gz");
+      #init karyo information
+      rv$karyoList=getKaryoData(karyoFile)
+      rv$chrPosOffset=rv$karyoList$chrPosOffset
+      rv$chrLabelDF=rv$karyoList$chrLabelDF
+      rv$genomeLen=max(rv$chrLabelDF$end2)
+      cat("Human reference", hgVersion, "loaded!\n");
+    }
+  })
+  
   #define CNV padding folds
   rv$cnvPadding=NULL #cnvPadding * cnvLength +- CNV region
   
@@ -120,7 +145,7 @@ function(input, output, session) {
       cnvChr=rv$cnvItem$chr
       xmin=rv$xmin
       xmax=rv$xmax
-      data.table(geneRefData) %>% 
+      data.table(rv$geneRefData) %>% 
         .[ chr == cnvChr & (between(start, xmin, xmax) | between(end, xmin, xmax) | (start<xmin & end>xmax) )]
     }
   })
@@ -154,7 +179,7 @@ function(input, output, session) {
                 .[, c('LRR', 'normLRR', 'BAF', 'newPos', 'Chr'):=list(if_else(LRR < minLRR, minLRR, if_else(LRR > maxLRR, maxLRR, LRR)),
                                                                          if_else(LRR < 0, LRR/abs(minLRR), LRR),
                                                                          if_else(BAF < 0, 0, if_else(BAF > 1, 1, BAF)),
-                                                                         Pos+chrPosOffset[Chr],
+                                                                         Pos+rv$chrPosOffset[Chr],
                                                                          factor(Chr, levels = unique(Chr))
                                                                       )]
           }
@@ -312,7 +337,7 @@ function(input, output, session) {
       if(!is.null(rv$cnvItem) & input$getChrPos != "NA"){
         cnvChr=rv$cnvItem$chr
         chrTail=input$getChrPos
-        rv$clickedPos=chrRefData %>% filter(chr== cnvChr) %>% select_(.dots=chrTail) %>% as.integer()
+        rv$clickedPos=rv$chrRefData %>% filter(chr== cnvChr) %>% select_(.dots=chrTail) %>% as.integer()
       }
     })
   #set CNV padding folds----
@@ -363,7 +388,7 @@ function(input, output, session) {
   observe({
     if(!is.null(rv$zoomRate) & !is.null(rv$cnvItem)){
       chrI=rv$cnvItem$chr
-      chrMax=karyoList$chrLabelDF %>% filter(chr == chrI) %>% .$end
+      chrMax=rv$karyoList$chrLabelDF %>% filter(chr == chrI) %>% .$end
       isolate({
         xLength=rv$xmax-rv$xmin+1
         rv$xmin=rv$xmin-xLength*rv$zoomRate
@@ -400,6 +425,7 @@ function(input, output, session) {
 
   #change chr of the cnv item, init with chr start and end----
   observeEvent(input$setChr, {
+    chrRefData=rv$chrRefData
     if(!is.null(input$cnvTbl_rows_selected) &  input$chr %in% chrRefData$chr){
       rv$cnvDF$chr[input$cnvTbl_rows_selected]=input$chr
       rv$cnvDF$start[input$cnvTbl_rows_selected]= chrRefData$start[chrRefData$chr == input$chr]
@@ -528,7 +554,7 @@ function(input, output, session) {
   #observe spect brush range----
   observeEvent(input$spect_brush, {
     if(rv$spectType %in% c("chr", "gene", "region") ){
-      chrOffset=chrPosOffset[rv$spectChr] %>% set_names(NULL)
+      chrOffset=rv$chrPosOffset[rv$spectChr] %>% set_names(NULL)
       rv$spectStart=as.integer(input$spect_brush$xmin) #brush start, without offfset added
       rv$spectEnd=as.integer(input$spect_brush$xmax) #brush end, without offfset added
       rv$spectType = 'region'
@@ -541,7 +567,7 @@ function(input, output, session) {
       spectChr=rv$spectChr
       xmin=rv$spectStart
       xmax=rv$spectEnd
-      tmp=geneRefData %>%
+      tmp=rv$geneRefData %>%
         filter( chr == spectChr, between(start, xmin, xmax)|between(end, xmin, xmax) | (start<xmin & end>xmax) )
       return(tmp)
     }
@@ -564,7 +590,7 @@ function(input, output, session) {
           snpRectDF=rect_n(snpRectDF, maxRect, "pos")
         }
       }
-      if(nrow(snpRectDF) >= 2){#do not plot if less than 2 points
+      if( length(snpRectDF) != 0 && nrow(snpRectDF) >= 2){#do not plot if less than 2 points
         snpRectDF=getLRRcolor(snpRectDF)
         return(snpRectDF)
       }
@@ -582,7 +608,10 @@ function(input, output, session) {
   rv$chrEnd=NULL
   rv$spectType="genome"
   observeEvent(input$setChrGene, {
-    if(input$chrGeneName %in% chrRefData$chr){
+    geneRefData=rv$geneRefData
+    karyoList=rv$karyoList
+    chrLabelDF=rv$chrLabelDF
+    if(input$chrGeneName %in% rv$chrRefData$chr){
       rv$spectChr=input$chrGeneName
       rv$spectStart=0
       rv$spectEnd=karyoList$chrLabelDF$end[karyoList$chrLabelDF$chr == rv$spectChr]
@@ -605,7 +634,7 @@ function(input, output, session) {
       chr=sub(pattern = "chr", replacement = "", inputVec[1], ignore.case = T)
       start=as.integer(inputVec[2])
       end=as.integer(inputVec[3])
-      if(chr %in% chrRefData$chr & start < end){
+      if(chr %in% rv$chrRefData$chr & start < end){
         chrMaxPos=chrLabelDF$end[chrLabelDF$chr == chr]
         if(end <= chrMaxPos){
           rv$spectChr=chr
@@ -755,6 +784,8 @@ function(input, output, session) {
   })
   #render bottom plot----
   observe({
+    karyoList=rv$karyoList
+    genomeLen=rv$genomeLen
     if(rv$SNPdataStatus){
       caseID=rv$sampleInfor$caseID
       caseNum=length(caseID)
@@ -795,6 +826,7 @@ function(input, output, session) {
             spectChr=rv$spectChr
             spectXmin=rv$spectStart
             spectXmax=rv$spectEnd
+            chrLabelDF=karyoList$chrLabelDF
             karyoDF=karyoList$karyoDF %>% filter(chr == spectChr)
             spectXlen=spectXmax-spectXmin
             xStep=spectXlen*btmFigStepRatio

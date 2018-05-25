@@ -33,14 +33,7 @@ genePlotHeight=100
 
 maxLRR=1
 minLRR=-4
-
 cnvDataHeader=c("Name", "Chr", "Pos", "LRR", "BAF")
-
-chrRefFile="refData/chrRange_hg19.txt"
-chrRefData=read.table(chrRefFile, header = T, sep = "\t", as.is = T)
-geneRefFile="refData/GeneRegion_hg19.txt"
-geneRefData=read.table(geneRefFile, header = T, sep = "\t", as.is = T) %>% group_by(chr) %>%
-  mutate(lineNum=seq_along(chr)%%3+1)
 
 cnvDFoutHeader=c('index', 'caseID', 'chr', 'start', 'end', 'CN', 'normRate', 'note', 'updated')
 
@@ -54,24 +47,6 @@ bafLrrPlotMar=c(0.25, 4, 0.25, 0)
 genePlotMar=c(3, 4, 0.25, 0)
 
 #bottom plot----
-karyoFile='refData/karyotype.hg19.txt';
-#read in cytoband infor----
-getKaryoData <- function(file){
-  karyoColors=c(acen='pink4',gneg='grey20',gpos100='grey35',gpos75='grey45',
-                gpos50='grey55',gpos25='grey65',gvar='grey75',stalk='grey10')
-  karyoData=read.table(file=file, header=T, as.is = T, sep="\t") %>% mutate(chr=sub("chr", "",chr) )
-  chrLen=karyoData %>% select(chr, end) %>% group_by(chr) %>% filter(end == max(end)) %>% ungroup()
-  chrPosOffset= chrLen %>% mutate(posOffset=cumsum(as.double(end)), posOffset=lag(posOffset, default = 0)) %>%
-    .$posOffset %>% as.vector() %>% set_names(unique(chrLen$chr))
-  chrLabelDF=chrLen %>% mutate(mid=end/2+chrPosOffset[chr], end2=end+chrPosOffset[chr]) %>% as.data.frame()
-  karyoDF=karyoData %>% mutate(newStart=start+chrPosOffset[chr], newEnd=end+chrPosOffset[chr], bandColor=karyoColors[stain])
-  return(list(karyoDF=karyoDF, chrLabelDF=chrLabelDF, chrPosOffset=chrPosOffset))
-}
-#init karyo information
-karyoList=getKaryoData(karyoFile)
-chrPosOffset=karyoList$chrPosOffset
-chrLabelDF=karyoList$chrLabelDF
-genomeLen=max(chrLabelDF$end2)
 
 maleCol='skyblue'
 femaleCol='pink'
@@ -82,30 +57,6 @@ geneAnnoCol="green4"
 btmFigStepRatio=1/200
 #define gene/region padding folds
 geneAdjLengthX=10
-
-#prepare smooth line data----
-getSmoothLine <- function (snpData, smoothNum=10){
-  rowNum=nrow(snpData)
-  snpData %>% arrange(Pos) %>% mutate(smtGroup=as.integer(1:rowNum/smoothNum)) %>%
-    group_by(smtGroup) %>% summarise(medPos=median(Pos), medLRR=median(LRR) ) %>% ungroup()
-}
-
-#map input value to most adjacent std value
-toStdVal<-function(inputVal, stdVal){
-  Map(function(x) stdVal[which.min(abs(stdVal-x))], inputVal) %>% unlist()
-}
-
-#prepare LRR color data----
-getLRRcolor<- function (snpData){
-  upVal=round(1-log2(seq(4, 1, length.out = 101))/2, digits = 3)
-  upColor=colorRampPalette(c("grey95","red4"))(101) %>% set_names(upVal)
-  downVal=round(log2(seq(1, 16, length.out = 101))/4-1, digits = 3)
-  downColor=colorRampPalette(c("blue4", "grey95"))(101) %>% set_names(downVal)
-  snpData %>%
-    mutate(normLRR=round(normLRR, digits = 3),
-           LRRcolor=if_else(normLRR > 0, upColor[as.character(toStdVal(normLRR, upVal))],
-                            downColor[as.character(toStdVal(normLRR, downVal))]))
-}
 
 #prepare smooth line data----
 getSmoothLine <- function (snpData, smoothNum=10){
@@ -131,7 +82,7 @@ rect_n <- function(snpData, n, type){
     data.table(snpData)[, label:=as.integer((Pos -    start)/interval)] %>%
       .[, .(Pos=mean(Pos), newPos=mean(newPos), normLRR=median(normLRR)), by=list(ymin, label)]
   }
-  #dplyr
+  #dplyr is too slow
   # if(type == "newpos"){
   #   snpData %>% mutate(label=as.integer((newPos - start)/interval)) %>% group_by(ymin, label) %>%
   #     summarise(Pos=mean(Pos), newPos=mean(newPos), normLRR=median(normLRR))
@@ -169,7 +120,7 @@ getCaseSNPchrDF <- function(caseSNPDFprep){
 getKaryoData <- function(file){
   karyoColors=c(acen='pink4',gneg='grey20',gpos100='grey35',gpos75='grey45',
                 gpos50='grey55',gpos25='grey65',gvar='grey75',stalk='grey10')
-  karyoData=read.table(file=file, header=T, as.is = T, sep="\t") %>% mutate(chr=sub("chr", "",chr) )
+  karyoData=read_tsv(file=file, col_types = "ccddc", progress = F) %>% mutate(chr=sub("chr", "",chr) )
   chrLen=karyoData %>% select(chr, end) %>% group_by(chr) %>% filter(end == max(end)) %>% ungroup()
   chrPosOffset= chrLen %>% mutate(posOffset=cumsum(as.double(end)), posOffset=lag(posOffset, default = 0)) %>%
     .$posOffset %>% as.vector() %>% set_names(unique(chrLen$chr))

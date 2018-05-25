@@ -9,10 +9,13 @@ fluidPage(
   title = 'CNViewer', #webpage title
   h3('Shiny Copy Number Variation'), #top-left title
   fluidRow(
-    column(3, 
+    column(2, 
            fileInput("cnvFile", "Choose CNV File", accept = c('text/csv') ), # browse cnv file
            column(5, verbatimTextOutput("inputFileText") )
-    )#cnv file input status
+    ), #cnv file input status
+    conditionalPanel("output.fileUploaded != true",
+      column(1, selectInput("getHgVersion", "hgVersion:", c("hg19", 'hg18', 'hg38'), selected = "hg19", width="100px"))
+    )
   ),
   hr(),
   conditionalPanel("output.fileUploaded == true",
