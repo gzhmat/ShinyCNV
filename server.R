@@ -39,10 +39,11 @@ function(input, output, session) {
   #define x range
   rv$xmin=NULL
   rv$xmax=NULL
-  #read in cnv information----
+  #observe read in cnv information----
   rv$cnvDF=NULL
   rv$inputFileText=NULL#indicate the status of input CNV file
   rv$sampleInfor=NULL
+  rv$caseYmin=NULL
   observeEvent(input$cnvFile, {
     #fast read
     rawInput = fread(input$cnvFile$datapath, header = T, sep = "\t")
@@ -51,6 +52,8 @@ function(input, output, session) {
       rv$cnvDF =  rawInput %>% 
         mutate(chr=ifelse(chr == 23, "X", ifelse(chr==24, "Y", chr)), note="False", updated="")
       rv$sampleInfor=rv$cnvDF %>% select(caseID, controlID, gender) %>% distinct(caseID, controlID, gender)
+      caseIDs=rv$sampleInfor$caseID
+      rv$caseYmin=-(1:length(caseIDs)) %>% set_names(caseIDs)
       #init SNP data
       rv$SNPdataStatus=F
       rv$SNPdata=NULL
@@ -152,7 +155,7 @@ function(input, output, session) {
   
 
   #____observe events----
-  #read in SNP data----
+  #observe read in SNP data----
   rv$getSNPdata=NULL
   rv$SNPdataStatus=F # no SNP data
   rv$SNPdata=NULL
@@ -194,7 +197,7 @@ function(input, output, session) {
   })
   
   
-  #move to previous CNV----
+  #observe move to previous CNV----
   observeEvent(input$prevCNV, {
     if(!is.null(rv$cnvItem) ){
       if(input$cnvTbl_rows_selected > 1){
@@ -204,7 +207,7 @@ function(input, output, session) {
     }
   }
   )
-  #move to next CNV----
+  #observe move to next CNV----
   observeEvent(input$nextCNV, {
     if(!is.null(rv$cnvItem) ){
       isolate({cnvItemNum=nrow(cnvDFout()) })
@@ -217,7 +220,7 @@ function(input, output, session) {
   )
   
   
-  #clear SNP data----
+  #observe clear SNP data----
   observeEvent(input$clearSNPdata, {
     rv$SNPdataStatus=F
     rv$SNPdata=NULL
@@ -328,7 +331,7 @@ function(input, output, session) {
       clickYpos=round(input$genePlot_click$y)
       cnvRegionGeneDF() %>%
         filter(start<= clickXpos, end >= clickXpos, clickYpos==lineNum) %>%
-        select(-transcript, -geneColor) %>% as.data.frame() %>% select(-lineNum)
+        select(-geneColor) %>% as.data.frame() %>% select(-lineNum)
     }
   })
 
@@ -510,7 +513,6 @@ function(input, output, session) {
   })
 
   #zoom out 2/5/10X/chr spectrum----
-  
   observeEvent(input$zoomOut2XSpect, {
     if(rv$spectType %in% c("gene", "region") ){
       zoomRate=2
@@ -550,6 +552,22 @@ function(input, output, session) {
       rv$spectType = 'region'
     }
   })
+  
+  #refresh CNV segments in spectrum----
+  rv$cnvSegs=NULL
+  observeEvent(input$refreshCNV, {
+      rv$cnvSegs= cnvDFout() %>% select(caseID:CN) %>% 
+        mutate(newStart=start+rv$chrPosOffset[chr], newEnd=end+rv$chrPosOffset[chr], ymin=rv$caseYmin[caseID], ymax=ymin+CNV_hight, length=end-start+1, 
+               color=ifelse(CN > 3, CNV_gain2_col,
+                            ifelse(CN>2, CNV_gain1_col,
+                                   ifelse(CN == 2, CNV_LOH_col, 
+                                          ifelse(CN > 0, CNV_loss1_col, ifelse(CN == 0 , CNV_loss2_col, "black")))))
+               )%>%
+        arrange(caseID, chr, desc(length))
+      rv$cnvSegs$color[rv$cnvIdx]=CNV_select_col
+      print(rv$cnvSegs)
+    }
+  )
   
   #observe spect brush range----
   observeEvent(input$spect_brush, {
@@ -661,7 +679,7 @@ function(input, output, session) {
       rv$inputFileText
   })
   
-  #render cnv datatable, ----
+  #render cnv datatable ----
   #proxy is used to include the replaceData function to smooth the table updating
   output$cnvTbl = DT::renderDataTable( isolate(cnvDFout()),
                                        rownames = F,
@@ -790,7 +808,7 @@ function(input, output, session) {
       caseID=rv$sampleInfor$caseID
       caseNum=length(caseID)
       caseLabelDF=data.frame(caseID, y=-(1:caseNum))
-      karyoHeight=1
+      
       genderDF=data.frame(gender=rv$sampleInfor$gender ) %>%
         mutate( y1=-(1:caseNum), y2=y1+1,
                 genderColor=if_else(gender == 'Male', maleCol,
@@ -798,7 +816,7 @@ function(input, output, session) {
       
       output$spectrumPlot = renderPlot(height = caseNum*15+250, expr={
         if(rv$SNPdataStatus & !is.null(caseSpectDF())){#duplicate but necessary
-          if(rv$spectType == 'genome'){ 
+          if(rv$spectType == 'genome'){
             spectXmin=0
             spectXmax=genomeLen
             karyoDF=karyoList$karyoDF
@@ -809,6 +827,8 @@ function(input, output, session) {
             par(mar=btmPlotMar);
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
             segments(x0=caseSpectDF()$newPos, x1=caseSpectDF()$newPos, y0=caseSpectDF()$ymin, y1=caseSpectDF()$ymin+1, col=caseSpectDF()$LRRcolor)
+            #CNV segments
+            rect(xleft=rv$cnvSegs$newStart, xright=rv$cnvSegs$newEnd, ybottom=rv$cnvSegs$ymin, ytop=rv$cnvSegs$ymax, col=rv$cnvSegs$color, border = NA)
             #karyotype anno rect at top
             rect(xleft=karyoDF$newStart, xright=karyoDF$newEnd, ybottom=0, ytop=karyoHeight, col=alpha(karyoDF$bandColor, alpha = 0.5), border = NA)
             #chr anno at top
@@ -827,15 +847,19 @@ function(input, output, session) {
             spectXmin=rv$spectStart
             spectXmax=rv$spectEnd
             chrLabelDF=karyoList$chrLabelDF
-            karyoDF=karyoList$karyoDF %>% filter(chr == spectChr)
             spectXlen=spectXmax-spectXmin
             xStep=spectXlen*btmFigStepRatio
+            karyoDF=karyoList$karyoDF %>% filter(chr == spectChr) %>% mutate(lengthRatio=(end-start)/spectXlen)
+            karyoDFlabel=karyoDF %>% filter(lengthRatio > cytoLabelWidth)
             #plot frame
             par(mar=btmPlotMar);
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
             segments(x0=caseSpectDF()$Pos, x1=caseSpectDF()$Pos, y0=caseSpectDF()$ymin, y1=caseSpectDF()$ymin+1, col=caseSpectDF()$LRRcolor)
+            #CNV segments
+            rect(xleft=rv$cnvSegs$start, xright=rv$cnvSegs$end, ybottom=rv$cnvSegs$ymin, ytop=rv$cnvSegs$ymax, col=rv$cnvSegs$color, border = NA)
             #karyotype anno rect at top
             rect(xleft=karyoDF$start, xright=karyoDF$end, ybottom=0, ytop=karyoHeight, col=alpha(karyoDF$bandColor, alpha = 0.5), border = NA)
+            text(x = (karyoDFlabel$start+karyoDFlabel$end)/2, y = karyoHeight/2, labels = karyoDFlabel$band, xpd=T, cex = cytoLabelCex, adj = c(0.5, 0.5))
             #chr anno at top
             text(x = (spectXmin+spectXmax)/2, y = karyoHeight+0.2, labels = spectChr, xpd=T, adj = c(0.5, 0))
             #case ID at left side
@@ -855,6 +879,9 @@ function(input, output, session) {
             spectXlen=spectXmax-spectXmin
             xStep=spectXlen*btmFigStepRatio
             snpPerCase=nrow(caseSpectDF())/caseNum
+            
+            karyoDF=karyoList$karyoDF %>% filter(chr == spectChr) %>% mutate(lengthRatio=(end-start)/spectXlen)
+            karyoDFlabel=karyoDF %>% filter(lengthRatio > cytoLabelWidth)
             #plot frame
             par(mar=btmPlotMar); 
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
@@ -868,8 +895,13 @@ function(input, output, session) {
             }else{
               segments(x0=caseSpectDF()$Pos, x1=caseSpectDF()$Pos, y0=caseSpectDF()$ymin, y1=caseSpectDF()$ymin+1, col=caseSpectDF()$LRRcolor)
             }
+            #CNV segments
+            rect(xleft=rv$cnvSegs$start, xright=rv$cnvSegs$end, ybottom=rv$cnvSegs$ymin, ytop=rv$cnvSegs$ymax, col=rv$cnvSegs$color, border = NA)
+            #karyotype anno rect at top
+            rect(xleft=karyoDF$start, xright=karyoDF$end, ybottom=0, ytop=karyoHeight, col=alpha(karyoDF$bandColor, alpha = 0.5), border = NA)
+            text(x = (karyoDFlabel$start+karyoDFlabel$end)/2, y = karyoHeight/2, labels = karyoDFlabel$band, xpd=T, cex = cytoLabelCex, adj = c(0.5, 0.5))
             #chr anno at top
-            text(x = (spectXmin+spectXmax)/2, y = 0.2, labels = spectChr, xpd=T, adj = c(0.5, 0))
+            text(x = (spectXmin+spectXmax)/2, y = karyoHeight+0.2, labels = spectChr, xpd=T, adj = c(0.5, 0))
             #case ID at left side
             text(x = spectXmin-xStep, y = -(1:caseNum)+0.5, labels = caseID, xpd=T, adj = c(1, 0.5))
             #gender rect at right tail
@@ -889,6 +921,9 @@ function(input, output, session) {
             spectXlen=spectXmax-spectXmin
             xStep=spectXlen*btmFigStepRatio
             snpPerCase=nrow(caseSpectDF())/caseNum
+            
+            karyoDF=karyoList$karyoDF %>% filter(chr == spectChr) %>% mutate(lengthRatio=(end-start)/spectXlen)
+            karyoDFlabel=karyoDF %>% filter(lengthRatio > cytoLabelWidth)
             #plot frame
             par(mar=btmPlotMar);
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
@@ -903,8 +938,13 @@ function(input, output, session) {
             else{
               segments(x0=caseSpectDF()$Pos, x1=caseSpectDF()$Pos, y0=caseSpectDF()$ymin, y1=caseSpectDF()$ymin+1, col=caseSpectDF()$LRRcolor)
             }
+            #CNV segments
+            rect(xleft=rv$cnvSegs$start, xright=rv$cnvSegs$end, ybottom=rv$cnvSegs$ymin, ytop=rv$cnvSegs$ymax, col=rv$cnvSegs$color, border = NA)
+            #karyotype anno rect at top
+            rect(xleft=karyoDF$start, xright=karyoDF$end, ybottom=0, ytop=karyoHeight, col=alpha(karyoDF$bandColor, alpha = 0.5), border = NA)
+            text(x = (karyoDFlabel$start+karyoDFlabel$end)/2, y = karyoHeight/2, labels = karyoDFlabel$band, xpd=T, cex = cytoLabelCex, adj = c(0.5, 0.5))
             #chr anno at top
-            text(x = (spectXmin+spectXmax)/2, y = 0.2, labels = spectChr, xpd=T, adj = c(0.5, 0))
+            text(x = (spectXmin+spectXmax)/2, y = karyoHeight+0.2, labels = spectChr, xpd=T, adj = c(0.5, 0))
             #case ID at left side
             text(x = spectXmin-xStep, y = -(1:caseNum)+0.5, labels = caseID, xpd=T, adj = c(1, 0.5))
             #gender rect at right tail

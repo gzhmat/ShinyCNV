@@ -50,6 +50,7 @@ genePlotMar=c(3, 4, 0.25, 0)
 
 maleCol='skyblue'
 femaleCol='pink'
+karyoHeight=1
 unknownGenderCol='grey80'
 btmPlotMar=c(2, 10, 3, 2)
 caseChrSepLineCol="grey25"
@@ -57,6 +58,19 @@ geneAnnoCol="green4"
 btmFigStepRatio=1/200
 #define gene/region padding folds
 geneAdjLengthX=10
+
+#cytoband width for label
+cytoLabelWidth=0.02
+cytoLabelCex=0.75
+
+#CNV color
+CNV_loss1_col="dodgerblue"
+CNV_loss2_col="blue4"
+CNV_gain1_col="pink2"
+CNV_gain2_col="red4"
+CNV_LOH_col="green4"
+CNV_select_col="orangered"
+CNV_hight=0.25
 
 #prepare smooth line data----
 getSmoothLine <- function (snpData, smoothNum=10){

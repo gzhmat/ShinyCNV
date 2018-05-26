@@ -83,13 +83,14 @@ fluidPage(
     conditionalPanel("output.SNPloaded == true",
       hr(),
       splitLayout(
-            cellWidths = c(100, 200, 300, 120, 120, 120, 120),
+            cellWidths = c(100, 200, 300, 120, 120, 120, 120, 120),
             actionButton("setChrGene", "Chr/Gene"),
             textInput("chrGeneName", "", placeholder = ""),
             verbatimTextOutput("spectPos", placeholder = TRUE),
             actionButton("zoomOut2XSpect", "Zoom out 2X"),
             actionButton("zoomOut5XSpect", "Zoom out 5X"),
-            actionButton("zoomOut10XSpect", "Zoom out 10X")
+            actionButton("zoomOut10XSpect", "Zoom out 10X"),
+            actionButton("refreshCNV", "Refresh CNV")
       ),
       plotOutput('spectrumPlot',
                  brush = brushOpts("spect_brush", delay = 500, delayType ="debounce", resetOnNew = T))
