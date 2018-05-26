@@ -562,10 +562,9 @@ function(input, output, session) {
                             ifelse(CN>2, CNV_gain1_col,
                                    ifelse(CN == 2, CNV_LOH_col, 
                                           ifelse(CN > 0, CNV_loss1_col, ifelse(CN == 0 , CNV_loss2_col, "black")))))
-               )%>%
-        arrange(caseID, chr, desc(length))
+               )
       rv$cnvSegs$color[rv$cnvIdx]=CNV_select_col
-      print(rv$cnvSegs)
+      rv$cnvSegs %>% arrange(caseID, chr, desc(length))
     }
   )
   
@@ -851,12 +850,14 @@ function(input, output, session) {
             xStep=spectXlen*btmFigStepRatio
             karyoDF=karyoList$karyoDF %>% filter(chr == spectChr) %>% mutate(lengthRatio=(end-start)/spectXlen)
             karyoDFlabel=karyoDF %>% filter(lengthRatio > cytoLabelWidth)
+            
+            cnvSegs=rv$cnvSegs %>% filter(chr == spectChr)
             #plot frame
             par(mar=btmPlotMar);
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
             segments(x0=caseSpectDF()$Pos, x1=caseSpectDF()$Pos, y0=caseSpectDF()$ymin, y1=caseSpectDF()$ymin+1, col=caseSpectDF()$LRRcolor)
             #CNV segments
-            rect(xleft=rv$cnvSegs$start, xright=rv$cnvSegs$end, ybottom=rv$cnvSegs$ymin, ytop=rv$cnvSegs$ymax, col=rv$cnvSegs$color, border = NA)
+            rect(xleft=cnvSegs$start, xright=cnvSegs$end, ybottom=cnvSegs$ymin, ytop=cnvSegs$ymax, col=cnvSegs$color, border = NA)
             #karyotype anno rect at top
             rect(xleft=karyoDF$start, xright=karyoDF$end, ybottom=0, ytop=karyoHeight, col=alpha(karyoDF$bandColor, alpha = 0.5), border = NA)
             text(x = (karyoDFlabel$start+karyoDFlabel$end)/2, y = karyoHeight/2, labels = karyoDFlabel$band, xpd=T, cex = cytoLabelCex, adj = c(0.5, 0.5))
@@ -882,6 +883,8 @@ function(input, output, session) {
             
             karyoDF=karyoList$karyoDF %>% filter(chr == spectChr) %>% mutate(lengthRatio=(end-start)/spectXlen)
             karyoDFlabel=karyoDF %>% filter(lengthRatio > cytoLabelWidth)
+            
+            cnvSegs=rv$cnvSegs %>% filter(chr == spectChr)
             #plot frame
             par(mar=btmPlotMar); 
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
@@ -896,7 +899,7 @@ function(input, output, session) {
               segments(x0=caseSpectDF()$Pos, x1=caseSpectDF()$Pos, y0=caseSpectDF()$ymin, y1=caseSpectDF()$ymin+1, col=caseSpectDF()$LRRcolor)
             }
             #CNV segments
-            rect(xleft=rv$cnvSegs$start, xright=rv$cnvSegs$end, ybottom=rv$cnvSegs$ymin, ytop=rv$cnvSegs$ymax, col=rv$cnvSegs$color, border = NA)
+            rect(xleft=cnvSegs$start, xright=cnvSegs$end, ybottom=cnvSegs$ymin, ytop=cnvSegs$ymax, col=cnvSegs$color, border = NA)
             #karyotype anno rect at top
             rect(xleft=karyoDF$start, xright=karyoDF$end, ybottom=0, ytop=karyoHeight, col=alpha(karyoDF$bandColor, alpha = 0.5), border = NA)
             text(x = (karyoDFlabel$start+karyoDFlabel$end)/2, y = karyoHeight/2, labels = karyoDFlabel$band, xpd=T, cex = cytoLabelCex, adj = c(0.5, 0.5))
@@ -924,6 +927,8 @@ function(input, output, session) {
             
             karyoDF=karyoList$karyoDF %>% filter(chr == spectChr) %>% mutate(lengthRatio=(end-start)/spectXlen)
             karyoDFlabel=karyoDF %>% filter(lengthRatio > cytoLabelWidth)
+            
+            cnvSegs=rv$cnvSegs %>% filter(chr == spectChr)
             #plot frame
             par(mar=btmPlotMar);
             plot(0, xlim=c(spectXmin, spectXmax), ylim=c(-caseNum-5, karyoHeight), type='n', ann=F, axes = F, xaxs='i')
@@ -939,7 +944,7 @@ function(input, output, session) {
               segments(x0=caseSpectDF()$Pos, x1=caseSpectDF()$Pos, y0=caseSpectDF()$ymin, y1=caseSpectDF()$ymin+1, col=caseSpectDF()$LRRcolor)
             }
             #CNV segments
-            rect(xleft=rv$cnvSegs$start, xright=rv$cnvSegs$end, ybottom=rv$cnvSegs$ymin, ytop=rv$cnvSegs$ymax, col=rv$cnvSegs$color, border = NA)
+            rect(xleft=cnvSegs$start, xright=cnvSegs$end, ybottom=cnvSegs$ymin, ytop=cnvSegs$ymax, col=cnvSegs$color, border = NA)
             #karyotype anno rect at top
             rect(xleft=karyoDF$start, xright=karyoDF$end, ybottom=0, ytop=karyoHeight, col=alpha(karyoDF$bandColor, alpha = 0.5), border = NA)
             text(x = (karyoDFlabel$start+karyoDFlabel$end)/2, y = karyoHeight/2, labels = karyoDFlabel$band, xpd=T, cex = cytoLabelCex, adj = c(0.5, 0.5))
