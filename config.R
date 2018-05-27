@@ -16,6 +16,10 @@ library(readr)
 dataDir="./SNPdata/"
 dataSuffix=".txt.gz"
 
+#local test
+# dataDir="S:/SNP/data"
+# dataSuffix=".txt"
+
 #global variables
 
 #max point number for showing the spectrum/rect
