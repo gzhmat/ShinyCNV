@@ -66,7 +66,7 @@ cytoLabelCex=0.75
 #CNV color
 CNV_loss1_col="dodgerblue"
 CNV_loss2_col="blue4"
-CNV_gain1_col="pink2"
+CNV_gain1_col="magenta3"
 CNV_gain2_col="red4"
 CNV_LOH_col="green4"
 CNV_select_col="orangered"
