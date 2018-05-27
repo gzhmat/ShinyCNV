@@ -66,10 +66,10 @@ cytoLabelCex=0.75
 #CNV color
 CNV_loss1_col="dodgerblue"
 CNV_loss2_col="blue4"
-CNV_gain1_col="magenta3"
+CNV_gain1_col="orangered"
 CNV_gain2_col="red4"
 CNV_LOH_col="green4"
-CNV_select_col="orangered"
+CNV_select_col="black"
 CNV_hight=0.25
 
 #prepare smooth line data----

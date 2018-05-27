@@ -60,7 +60,13 @@
   margin-right: 2px;
 }
 
-#refreshCNV{
+#showCNV{
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 2px;
+}
+
+#noCNV{
   margin-top: 20px;
   margin-right: 2px;
 }
