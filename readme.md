@@ -66,15 +66,17 @@ Within this panel, you could:
 Check CNVs and update their breakpoints
 ---------------------------------------
 
-The most useful function of this app is to manually check each CNV and adjust inaccurate breakpoints, which is in the LRR/BAF panel as below:
+The most useful function of this app is to manually check each CNV and adjust inaccurate breakpoints, which is in the BAF/LRR panel as below:
 
-![LRR/BAF panel](./readme_files/fig/3.PNG)
+![BAF/LRR panel](./readme_files/fig/3.PNG)
 
 -   This figure will be shown once CNV "A004" is selected. Each dot represents a SNP probe, with X axis along chromosome coordination and Y axis showing normalized LRR and BAF.
 -   Two red vertical lines indicate the reported breakpoints of selected CNV, which is obviously correct according to the figure.
 -   The RefSeq genes are shown as bars at the bottom panel, and the COSMIC cancer genes are marked in red. Detailed gene information could be checked by clicking. E.g., the red bar is clicked and the information of gene *ETV6* is shown at the bottom.
--   To change the breakpoints of selected CNV, users could zoom in LRR/BAF graph by mouse-swipe and then pick the correct position by clicking. Chromosome position of the SNP nearest to the click will be shown in box "Pos:" and the start/end positions could be updated by "Set Start/End" buttons.
--   In case of marking whole chromosome gain/loss, users need the start and end positions of that chromosome. To do this, the dropdown list "Chr:" is very handy. Usually the start of each chromosome is 0, but for chromosome 13, 14, 15, 21 and 22, the P arm is not assessable and thus would start from the first SNP probe according to the most recent Infinium Omni2.5Exome-8 array.
+-   To change the breakpoints of selected CNV, users could zoom in BAF/LRR graph by mouse-swiping and zoom out through the "Zoom out 2/5/10X" buttons. After clicking a potential breakpoint in BAF/LRR panel, chromosome position of the SNP nearest to the clicked spot will be shown in box "Pos:" and the start/end positions could be updated by "Set Start/End" buttons.
+-   In case of marking whole chromosome gain/loss, users need the start and end positions of that chromosome. To do this, the dropdown list "Chr:" is very handy. Usually the start of each chromosome is 1, but for chromosome 13, 14, 15, 21 and 22, the P arm is not assessable and thus would start from cytoband after centromere.
+-   “Padding X” drop-list is for adjusting the length of padding regions around the CNV
+-   “maxSNP” drop-list is for setting maximum number of SNPs shown in each BAF/LRR panel
 
 CNV spectrum for imported samples
 ---------------------------------
@@ -87,14 +89,14 @@ After loading SNP data , LRR across genome will be shown in the spectrum panel b
 -   Case IDs are on the left side and chromosomes are on the top.
 -   Genders are marked at the right side: pink for female; skyblue for male.
 -   Based on LRR intensity on X and Y chromosomes, gender information could checked.
--   Within this panel, mouse swipe zoom in is **NOT** supported.
+-   Within this panel, mouse-swiping zoom in is **NOT** supported.
 -   “show CNV” and “no CNV” buttons are provided to show and hide the imported CNVs as bars at the bottom of eash sample.
-    -   copy-neutral loss of heterozygosity: <span style="color:green">**GREEN**</span>
-    -   1 copy loss: <span style="color:#1E90FF">**LIGHT BLUE**</span>
-    -   2 copy loss (0 copy left): <span style="color:#00008B">**DARK BLUE**</span>
-    -   1 copy gain: <span style="color:#FF4500">**RED**</span>
-    -   2 or more copy gain: <span style="color:#8B0000">**DARK RED**</span>
-    -   selected CNV (see below): <span style="color:#CD00CD">**MAGENTA**</span>
+    -   copy-neutral loss of heterozygosity: **green** ![\#008B00](https://placehold.it/15/008B00/000000?text=+)
+    -   1 copy loss: **light blue** ![\#1E90FF](https://placehold.it/15/1E90FF/000000?text=+)
+    -   2 copy loss (0 copy left): **dark blue** ![\#00008B](https://placehold.it/15/00008B/000000?text=+)
+    -   1 copy gain: **red** ![\#FF4500](https://placehold.it/15/FF4500/000000?text=+)
+    -   2 or more copy gain: **dark red** ![\#8B0000](https://placehold.it/15/8B0000/000000?text=+)
+    -   selected CNV (see below): **magenta** ![\#CD00CD](https://placehold.it/15/CD00CD/000000?text=+)
 
 Users could navigate to specific chromosome, gene, region through input box "Chr/Gene":
 
@@ -105,7 +107,7 @@ Users could navigate to specific chromosome, gene, region through input box "Chr
     -   gene symbol: e.g. "TP53"
     -   region: "12:11329569-13134790"
 -   The input type is automatically detected, and if it cannot fit into any of the 3 types, whole genome spectrum will be shown.
--   Within the figure, mouse swipe zoom in is supported.
+-   Within the figure, mouse-swiping zoom in is supported.
 -   Genes from RefSeq are shown as bars at bottom, and the COSMIC cancer genes are highlighted in red.
 -   This figure is useful for checking key focal lesions like *IKZF1*, *CDKN2A/B*, *PAX5* etc.
 
