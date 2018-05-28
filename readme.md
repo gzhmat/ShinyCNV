@@ -12,7 +12,7 @@ Installation
 1.  Install [R environment](https://www.r-project.org/)
 2.  Install [RStudio](https://www.rstudio.com/).
 3.  Install ShinyCNV
-    -   Download ShinyCNV by clicking the green button ![download](./readme_files/fig/download.png). Chrome, IE explorer and Firefox were tested, and other browsers should work too. The example data includes SNP data on chr12 and chrY from 6 cases (`P1 to P6, *A is tumor and *C is control; P6A is unpaired, and P4C is used as a fake control`).
+    -   Download the updating ShinyCNV by clicking the green button ![download](./readme_files/fig/download.png) or the released stable versions. Chrome, IE explorer and Firefox were tested, and other browsers should work too. The example data includes SNP data on chr12 and chrY from 6 cases (`P1 to P6, *A is tumor and *C is control; P6A is unpaired, and P4C is used as a fake control`).
     -   Unzip the ShinyCNV package and open either "ui.R" or "server.R" in RStudio
     -   Click "Run App" button at the top-right corner, the availability of relied R packages will be automatically checked and installed.
     -   After successful installation, you should be able to see this without error:
