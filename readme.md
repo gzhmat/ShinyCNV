@@ -89,7 +89,7 @@ After loading SNP data , LRR across genome will be shown in the spectrum panel b
 -   Based on LRR intensity on X and Y chromosomes, gender information could checked.
 -   Within this panel, mouse swipe zoom in is **NOT** supported.
 -   “show CNV” and “no CNV” buttons are provided to show and hide the imported CNVs as bars at the bottom of eash sample.
-    -   copy-neutral loss of heterozygosity: <span style="color:#008B00">**GREEN**</span>
+    -   copy-neutral loss of heterozygosity: <span style="color:green">**GREEN**</span>
     -   1 copy loss: <span style="color:#1E90FF">**LIGHT BLUE**</span>
     -   2 copy loss (0 copy left): <span style="color:#00008B">**DARK BLUE**</span>
     -   1 copy gain: <span style="color:#FF4500">**RED**</span>
