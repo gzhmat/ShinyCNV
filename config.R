@@ -73,7 +73,7 @@ CNV_loss2_col="blue4"
 CNV_gain1_col="orangered"
 CNV_gain2_col="red4"
 CNV_LOH_col="green4"
-CNV_select_col="black"
+CNV_select_col="magenta3"
 CNV_hight=0.25
 
 #prepare smooth line data----

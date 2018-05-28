@@ -18,7 +18,7 @@ function(input, output, session) {
       chrRefFile=paste0("refData/chrRange.", hgVersion, ".txt.gz");
       rv$chrRefData=read_tsv(chrRefFile, col_types = "cdd", progress = F)
       geneRefFile=paste0("refData/geneRange.", hgVersion, ".txt.gz");
-      rv$geneRefData=read_tsv(geneRefFile, col_types = "ccddccc", progress = F) %>% group_by(chr) %>%
+      rv$geneRefData=read_tsv(geneRefFile, col_types = "cciiccc", progress = F) %>% group_by(chr) %>%
         mutate(lineNum=seq_along(chr)%%3+1)
       karyoFile=paste0("refData/cytoband.", hgVersion, ".txt.gz");
       #init karyo information
@@ -169,7 +169,7 @@ function(input, output, session) {
         rv$SNPdata=list()
         for(i in 1:smpNum){
           si=samples[i]
-          siFile=paste0(dataDir, si, dataSuffix)
+          siFile=paste0(dataDir, "/", si, dataSuffix)
           if(!file.exists(siFile)){
             rv$getSNPdata=paste0("file ", siFile, " does not exist!")
             allFileExistStat=F
@@ -571,7 +571,6 @@ function(input, output, session) {
                                    ifelse(CN == 2, CNV_LOH_col, 
                                           ifelse(CN > 0, CNV_loss1_col, ifelse(CN == 0 , CNV_loss2_col, "black")))))
                )
-      print(cnvIdxForLRRSpect())
       rv$cnvSegs$color[cnvIdxForLRRSpect()]=CNV_select_col
       rv$cnvSegs=rv$cnvSegs %>% arrange(caseID, chr, desc(length))
     }

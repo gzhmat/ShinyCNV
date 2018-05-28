@@ -12,12 +12,14 @@ Installation
 1.  Install [R environment](https://www.r-project.org/)
 2.  Install [RStudio](https://www.rstudio.com/).
 3.  Install ShinyCNV
-    -   Download ShinyCNV by clicking the green button ![download](./readme_files/fig/download.png). Chrome, IE explorer and Firefox were tested. The example data includes SNP data from 6 cases (`P1 to P6, *A is tumor and *C is control; P6A is unpaired, and P4C is used as a fake control`), thus the file size is big (~350Mb).
+    -   Download ShinyCNV by clicking the green button ![download](./readme_files/fig/download.png). Chrome, IE explorer and Firefox were tested, and other browsers should work too. The example data includes SNP data from 6 cases (`P1 to P6, *A is tumor and *C is control; P6A is unpaired, and P4C is used as a fake control`), thus the file size is big (~350Mb).
     -   Unzip the ShinyCNV package and open either "ui.R" or "server.R" in RStudio
     -   Click "Run App" button at the top-right corner, the availability of relied R packages will be automatically checked and installed.
     -   After successful installation, you should be able to see this without error:
 
-    ![first view](./readme_files/fig/1.PNG "fig:")
+    ![first view](./readme_files/fig/1.PNG)
+
+    **NOTE: This app is optimized for full-screen mode and the width of the screen is ideally wider than 1,800 pixels.**
 
 Input files
 -----------
@@ -46,19 +48,19 @@ Input files
 Annotate CNV table
 ------------------
 
-Now we are ready to go! Click the "Browse" button to import the CNV region file:
+Now you are ready to go! Click the "Browse" button to import the CNV region file:
 
 ![CNV table panel](./readme_files/fig/2.PNG)
 
 Within this panel, you could:
 
 -   select a CNV segment by clicking
--   read in SNP data based on the imported case ID and control ID
+-   read in SNP data based on the imported case ID and control ID, **which could be very slow!!!**
 -   use "Prev/Next CNV" button to navigate the selected CNV
 -   add/delete CNV
 -   mark selected CNV as germline/covered/false/true by clicking the buttons
 -   set chr/copy number(CN)/normRate(NR); "set chr" is only for newly added CNVs
--   clear the imported SNP data, which usually take the longest time, so be cautious on doing this
+-   clear the imported SNP data, be cautious on doing this
 
 Check CNVs and update their breakpoints
 ---------------------------------------
@@ -84,6 +86,7 @@ After loading SNP data , LRR across genome will be shown in the spectrum panel b
 -   Case IDs are on the left side and chromosomes are on the top.
 -   Genders are marked at the right side: pink for female; skyblue for male.
 -   Based on LRR intensity on X and Y chromosomes, gender information could checked.
+-   Within this panel, mouse swipe zoom in is **NOT** supported.
 
 Users could navigate to specific chromosome, gene, region through input box "Chr/Gene":
 

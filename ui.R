@@ -85,7 +85,7 @@ fluidPage(
     conditionalPanel("output.SNPloaded == true",
       hr(),
       splitLayout(
-            cellWidths = c(100, 200, 250, 120, 120, 120, 120, 80, 80),
+            cellWidths = c(100, 200, 300, 120, 120, 120, 120, 80, 80),
             actionButton("setChrGene", "Chr/Gene"),
             textInput("chrGeneName", "", placeholder = ""),
             verbatimTextOutput("spectPos", placeholder = TRUE),
