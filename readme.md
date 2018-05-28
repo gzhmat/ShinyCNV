@@ -12,7 +12,7 @@ Installation
 1.  Install [R environment](https://www.r-project.org/)
 2.  Install [RStudio](https://www.rstudio.com/).
 3.  Install ShinyCNV
-    -   Download ShinyCNV by clicking the green button ![download](./readme_files/fig/download.png). Chrome, IE explorer and Firefox were tested, and other browsers should work too. The example data includes SNP data from 6 cases (`P1 to P6, *A is tumor and *C is control; P6A is unpaired, and P4C is used as a fake control`), thus the file size is big (~350Mb).
+    -   Download ShinyCNV by clicking the green button ![download](./readme_files/fig/download.png). Chrome, IE explorer and Firefox were tested, and other browsers should work too. The example data includes SNP data on chr12 and chrY from 6 cases (`P1 to P6, *A is tumor and *C is control; P6A is unpaired, and P4C is used as a fake control`).
     -   Unzip the ShinyCNV package and open either "ui.R" or "server.R" in RStudio
     -   Click "Run App" button at the top-right corner, the availability of relied R packages will be automatically checked and installed.
     -   After successful installation, you should be able to see this without error:
@@ -48,7 +48,8 @@ Input files
 Annotate CNV table
 ------------------
 
-Now you are ready to go! Click the "Browse" button to import the CNV region file:
+Before loading the CNV table, make sure proper human genome build version is selected!
+Click the "Browse" button to import the CNV CNV table:
 
 ![CNV table panel](./readme_files/fig/2.PNG)
 
@@ -87,6 +88,13 @@ After loading SNP data , LRR across genome will be shown in the spectrum panel b
 -   Genders are marked at the right side: pink for female; skyblue for male.
 -   Based on LRR intensity on X and Y chromosomes, gender information could checked.
 -   Within this panel, mouse swipe zoom in is **NOT** supported.
+-   “show CNV” and “no CNV” buttons are provided to show and hide the imported CNVs as bars at the bottom of eash sample.
+    -   copy-neutral loss of heterozygosity: <span style="color:#008B00">**GREEN**</span>
+    -   1 copy loss: <span style="color:#1E90FF">**LIGHT BLUE**</span>
+    -   2 copy loss (0 copy left): <span style="color:#00008B">**DARK BLUE**</span>
+    -   1 copy gain: <span style="color:#FF4500">**RED**</span>
+    -   2 or more copy gain: <span style="color:#8B0000">**DARK RED**</span>
+    -   selected CNV (see below): <span style="color:#CD00CD">**MAGENTA**</span>
 
 Users could navigate to specific chromosome, gene, region through input box "Chr/Gene":
 
