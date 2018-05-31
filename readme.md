@@ -90,7 +90,7 @@ After loading SNP data , LRR across genome will be shown in the spectrum panel b
 -   Genders are marked at the right side: pink for female; skyblue for male.
 -   Based on LRR intensity on X and Y chromosomes, gender information could checked.
 -   Within this panel, mouse-swiping zoom in is **NOT** supported.
--   “show CNV” and “no CNV” buttons are provided to show and hide the imported CNVs as bars at the bottom of eash sample.
+-   “Show CNV” and “Hide CNV” buttons are provided to show and hide the imported CNVs as bars at the bottom of eash sample.
     -   copy-neutral loss of heterozygosity: **green** ![\#008B00](https://placehold.it/15/008B00/000000?text=+)
     -   1 copy loss: **light blue** ![\#1E90FF](https://placehold.it/15/1E90FF/000000?text=+)
     -   2 copy loss (0 copy left): **dark blue** ![\#00008B](https://placehold.it/15/00008B/000000?text=+)
