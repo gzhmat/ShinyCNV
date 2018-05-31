@@ -34,7 +34,7 @@ Input files
     -   Detailed steps on preparing [**Illumina**](http://penncnv.openbioinformatics.org/en/latest/user-guide/input/) and [**Affymetrix**](http://penncnv.openbioinformatics.org/en/latest/user-guide/affy/) data are available from PennCNV's website.
 2.  Reported CNV regions
     -   The reported CNVs could be called by software, as long as the following columns are provided (use the exact same column names):
-        -   index `/CNV id asigned by users, which is used to compare the updated CNVs with the original ones`
+        -   index `/CNV ID; assigned  by users, which is used to compare the updated CNVs with the original ones`
         -   caseID `/case ID; SNP data file is caseID.{suffix}`
         -   controlID `/control ID; SNP data file is control.{suffix}; for unpaired cases, use other control`
         -   chr `/chromosome`
@@ -49,7 +49,7 @@ Annotate CNV table
 ------------------
 
 Before loading the CNV table, make sure proper human genome build version is selected!
-Click the "Browse" button to import the CNV CNV table:
+Click the "Browse" button to import the CNV table:
 
 ![CNV table panel](./readme_files/fig/2.PNG)
 
@@ -81,16 +81,16 @@ The most useful function of this app is to manually check each CNV and adjust in
 CNV spectrum for imported samples
 ---------------------------------
 
-After loading SNP data , LRR across genome will be shown in the spectrum panel below:
+After loading SNP data, LRR across genome will be shown in the spectrum panel below:
 
 ![Genome spectrum panel](./readme_files/fig/4.PNG)
 
 -   Blue means LRR is below 0 (copy number loss) while red means above 0 (copy number gain).
 -   Case IDs are on the left side and chromosomes are on the top.
 -   Genders are marked at the right side: pink for female; skyblue for male.
--   Based on LRR intensity on X and Y chromosomes, gender information could checked.
+-   Based on LRR intensity on X and Y chromosomes, gender information could be checked.
 -   Within this panel, mouse-swiping zoom in is **NOT** supported.
--   “Show CNV” and “Hide CNV” buttons are provided to show and hide the imported CNVs as bars at the bottom of eash sample.
+-   “Show CNV” and “Hide CNV” buttons are provided to show and hide the imported CNVs as bars at the bottom of each sample.
     -   copy-neutral loss of heterozygosity: **green** ![\#008B00](https://placehold.it/15/008B00/000000?text=+)
     -   1 copy loss: **light blue** ![\#1E90FF](https://placehold.it/15/1E90FF/000000?text=+)
     -   2 copy loss (0 copy left): **dark blue** ![\#00008B](https://placehold.it/15/00008B/000000?text=+)
