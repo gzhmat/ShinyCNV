@@ -19,7 +19,7 @@ Installation
 
     ![first view](./readme_files/fig/1.PNG)
 
-    **NOTE: This app is optimized for full-screen mode and the width of the screen is ideally wider than 1,800 pixels.**
+    **NOTE: This app is optimized for full-screen mode and the width of screen is ideally wider than 1,800 pixels.**
 
 Input files
 -----------
