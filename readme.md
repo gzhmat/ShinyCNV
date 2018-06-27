@@ -44,6 +44,7 @@ Input files
         -   normRate `/normal sample contamination rate; set 0 if unknown`
         -   gender `/Female or Male; set 'Unknown' if unknown`
         -   paired `/Yes or No`
+    -   **Since the sorting function is not available now, it would be good if users could sort the input CNV regions before loading to ShinyCNV.**
 
 Annotate CNV table
 ------------------
