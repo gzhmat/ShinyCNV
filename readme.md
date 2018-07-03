@@ -78,7 +78,7 @@ The most useful function of this app is to manually check each CNV and adjust in
 -   In case of marking whole chromosome gain/loss, users need the start and end positions of that chromosome. To do this, the dropdown list "Chr:" is very handy. Usually the start of each chromosome is 1, but for chromosome 13, 14, 15, 21 and 22, the P arm is not assessable and thus would start from cytoband after centromere.
 -   “Padding X” drop-list is for adjusting the length of padding regions around the CNV
 -   “maxSNP” drop-list is for setting maximum number of SNPs shown in each BAF/LRR panel
--   **NOTE: Any update to the CNV table will be saved in "cnv.bak" file under the App's folder. **
+-   **NOTE: Any update to the CNV table will be saved in "cnv.bak" file under the App's folder.**
 
 CNV spectrum for imported samples
 ---------------------------------
