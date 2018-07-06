@@ -6,7 +6,7 @@ source("./config.R")
 
 fluidPage(
   theme = "style.css",
-  title = 'CNViewer', #webpage title
+  title = 'ShinyCNV', #webpage title
   h3('Shiny Copy Number Variation'), #top-left title
   conditionalPanel("output.fileUploaded != true",
                    selectInput("getHgVersion", "hg build:", c('hg18', "hg19", 'hg38'), selected = "hg19", width="100px")
