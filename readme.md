@@ -19,6 +19,7 @@ Installation
 
     ![first view](./readme_files/fig/1.PNG)
 
+    **NOTE: Before loading your real data, edit "config.R" to provide SNP data directory and file extension.**
     **NOTE: This app is optimized for full-screen mode and the width of screen is ideally wider than 1,800 pixels.**
 
 Input files
