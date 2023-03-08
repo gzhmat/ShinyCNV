@@ -13,7 +13,7 @@ fluidPage(
   ),
   fluidRow(
     column(2,
-           fileInput("cnvFile", "Choose CNV File", accept = c('text/csv') ), # browse cnv file
+           fileInput("cnvFile", "Choose CNV File", accept = c('txt/csv') ), # browse cnv file
            verbatimTextOutput("inputFileText")
 
     ) #cnv file input status
