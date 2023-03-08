@@ -697,7 +697,9 @@ function(input, output, session) {
                                        selection=list(mode="single"),
                                        class="compact",
                                        options = list(
-                                        columnDefs = list(className = 'dt-center', targets = "_all"),
+                                        columnDefs = list(
+                                          list(className = 'dt-center', targets = "_all")
+                                        ),
                                         pageLength = 20,
                                         lengthMenu = c(10, 20, 25, 50, 100),
                                         ordering=F,
